@@ -8,6 +8,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import net.anumbrella.rabbitmq.sender.CallBackSender;
 import net.anumbrella.rabbitmq.sender.DirectSender;
+import net.anumbrella.rabbitmq.sender.DistributionSender;
 import net.anumbrella.rabbitmq.sender.FanoutSender;
 import net.anumbrella.rabbitmq.sender.HeadersSender;
 import net.anumbrella.rabbitmq.sender.HelloSender1;
@@ -42,6 +43,10 @@ public class RabbitTest {
 
 	@Autowired
 	private CallBackSender callBackSender;
+	
+	
+	@Autowired
+	private DistributionSender distributionSender;
 
 	/**
 	 * 单生产者和单消费者
@@ -118,6 +123,17 @@ public class RabbitTest {
 	@GetMapping("/callback")
 	public void callbak() {
 		callBackSender.send();
+	}
+	
+	/**
+	 * 分发机制消息发送测试
+	 */
+	@GetMapping("/distribu")
+	public void distribu() {
+		for (int i = 0; i < 5; i++) {
+			//发送任务复杂度都为1的消息
+			distributionSender.send(1);
+		}
 	}
 
 }

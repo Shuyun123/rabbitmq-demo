@@ -58,8 +58,17 @@ public class RabbitConfig {
 		return new Queue("user");
 	}
 
+	/**
+	 * 申明distribu队列
+	 * 
+	 * @return
+	 */
+	@Bean
+	public Queue DistribuQueue() {
+		return new Queue("distribu");
+	}
+
 	// ===============以上是验证rabbitmq默认 Exchange的队列和交互机==========
-	
 
 	// ===============以下是验证topic Exchange的队列和交互机==========
 

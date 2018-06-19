@@ -1,20 +1,27 @@
 package net.anumbrella.rabbitmq.config;
 
+import org.springframework.amqp.core.AcknowledgeMode;
 import org.springframework.amqp.core.Binding;
 import org.springframework.amqp.core.BindingBuilder;
 import org.springframework.amqp.core.DirectExchange;
 import org.springframework.amqp.core.FanoutExchange;
 import org.springframework.amqp.core.HeadersExchange;
+import org.springframework.amqp.core.Message;
 import org.springframework.amqp.core.Queue;
 import org.springframework.amqp.core.TopicExchange;
 import org.springframework.amqp.rabbit.connection.CachingConnectionFactory;
 import org.springframework.amqp.rabbit.connection.ConnectionFactory;
+import org.springframework.amqp.rabbit.core.ChannelAwareMessageListener;
 import org.springframework.amqp.rabbit.core.RabbitTemplate;
+import org.springframework.amqp.rabbit.listener.SimpleMessageListenerContainer;
+import org.springframework.amqp.rabbit.transaction.RabbitTransactionManager;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Scope;
+
+import com.rabbitmq.client.Channel;
 
 @Configuration
 public class RabbitConfig {
@@ -232,9 +239,59 @@ public class RabbitConfig {
 	 */
 	@Bean
 	@Scope(ConfigurableBeanFactory.SCOPE_PROTOTYPE)
-	public RabbitTemplate rabbitTemplatenew() {
+	public RabbitTemplate rabbitTemplateNew() {
 		RabbitTemplate template = new RabbitTemplate(connectionFactory());
+		template.setChannelTransacted(true);
 		return template;
+	}
+
+	/**
+	 * 声明transition2队列
+	 * 
+	 * @return
+	 */
+	@Bean
+	public Queue transitionQueue() {
+		return new Queue("transition2");
+	}
+
+	@Bean
+	public SimpleMessageListenerContainer messageListenerContainer() {
+		SimpleMessageListenerContainer container = new SimpleMessageListenerContainer();
+		container.setConnectionFactory(connectionFactory());
+		container.setTransactionManager(rabbitTransactionManager());
+		container.setChannelTransacted(true);
+		// 开启手动确认
+		container.setAcknowledgeMode(AcknowledgeMode.MANUAL);
+		container.setQueues(transitionQueue());
+		container.setMessageListener(new TransitionConsumer());
+		return container;
+	}
+
+	/**
+	 * 事务管理
+	 * 
+	 * @return
+	 */
+	@Bean
+	public RabbitTransactionManager rabbitTransactionManager() {
+		return new RabbitTransactionManager(connectionFactory());
+	}
+
+	/**
+	 * 自定义消费者
+	 */
+	public class TransitionConsumer implements ChannelAwareMessageListener {
+
+		@Override
+		public void onMessage(Message message, Channel channel) throws Exception {
+			byte[] body = message.getBody();
+			System.out.println("TransitionConsumer: " + new String(body));
+			// 确认消息成功消费
+			channel.basicAck(message.getMessageProperties().getDeliveryTag(), false);
+			// 除以0，模拟异常，进行事务回滚
+			// int t = 1 / 0;
+		}
 	}
 
 }

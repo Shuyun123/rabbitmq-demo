@@ -15,7 +15,6 @@ public class DistributionReceiver {
 	 * 
 	 * @param msg
 	 */
-	@SuppressWarnings("deprecation")
 	@RabbitListener(queues = "distribu")
 	public void processA(Message message) {
 		String msg = new String(message.getBody());
@@ -40,7 +39,6 @@ public class DistributionReceiver {
 	 * 
 	 * @param msg
 	 */
-	@SuppressWarnings("deprecation")
 	@RabbitListener(queues = "distribu")
 	public void processB(Message message) {
 		String msg = new String(message.getBody());

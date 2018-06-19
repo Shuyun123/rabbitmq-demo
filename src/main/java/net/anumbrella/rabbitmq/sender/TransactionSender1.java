@@ -3,15 +3,13 @@ package net.anumbrella.rabbitmq.sender;
 import java.io.IOException;
 import java.util.concurrent.TimeoutException;
 
-import org.apache.commons.lang.StringUtils;
-
 import com.rabbitmq.client.Channel;
 import com.rabbitmq.client.Connection;
 import com.rabbitmq.client.ConnectionFactory;
 
-public class DistributionSender3 {
+public class TransactionSender1 {
 
-	private final static String QUEUE_NAME = "test";
+	private final static String QUEUE_NAME = "transition";
 
 	public static void main(String[] args) throws IOException, TimeoutException {
 		/**
@@ -34,19 +32,25 @@ public class DistributionSender3 {
 
 		// 指定一个队列
 		channel.queueDeclare(QUEUE_NAME, false, false, false, null);
-		
-		int prefetchCount = 1;
-		// 限制发给同一个消费者不得超过1条消息
-		channel.basicQos(prefetchCount);
+		// 发送的消息
+		String message = "This is a transaction message！";
 
-		for (int i = 0; i < 8; i++) {
-			// 发送的消息
-			String message = "This is a task, and the complexity is " + 1 + "。" + StringUtils.repeat(".", 1);
-			// 往队列中发出一条消息， 使用rabbitmq默认交换机
+		try {
+			// 开启事务
+			channel.txSelect();
+			// 往队列中发出一条消息，使用rabbitmq默认交换机
 			channel.basicPublish("", QUEUE_NAME, null, message.getBytes());
-
-			System.out.println(" DistributionSender3 Sent '" + message + "'");
+			// 除以0，模拟异常，进行事务回滚
+			// int t = 1/0;
+			// 提交事务
+			channel.txCommit();
+		} catch (Exception e) {
+			e.printStackTrace();
+			// 事务回滚
+			channel.txRollback();
 		}
+
+		System.out.println(" DistributionSender2 Sent '" + message + "'");
 		// 关闭频道和连接
 		channel.close();
 		connection.close();

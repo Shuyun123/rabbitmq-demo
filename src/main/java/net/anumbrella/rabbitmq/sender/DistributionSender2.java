@@ -37,7 +37,7 @@ public class DistributionSender2 {
 		for (int i = 0; i < 8; i++) {
 			// 发送的消息
 			String message = "This is a task, and the complexity is " + i + "。" + StringUtils.repeat(".", i);
-			// 往队列中发出一条消息
+			// 往队列中发出一条消息，使用rabbitmq默认交换机
 			channel.basicPublish("", QUEUE_NAME, null, message.getBytes());
 
 			System.out.println(" DistributionSender2 Sent '" + message + "'");

@@ -14,6 +14,7 @@ import net.anumbrella.rabbitmq.sender.HeadersSender;
 import net.anumbrella.rabbitmq.sender.HelloSender1;
 import net.anumbrella.rabbitmq.sender.HelloSender2;
 import net.anumbrella.rabbitmq.sender.TopicSender;
+import net.anumbrella.rabbitmq.sender.TransactionSender2;
 import net.anumbrella.rabbitmq.sender.UserSender;
 
 @RestController
@@ -42,11 +43,13 @@ public class RabbitTest {
 	private UserSender userSender;
 
 	@Autowired
-	private CallBackSender callBackSender;
-	
+	private CallBackSender callBackSender;	
 	
 	@Autowired
 	private DistributionSender distributionSender;
+	
+	@Autowired
+	private TransactionSender2 transactionSender;
 
 	/**
 	 * 单生产者和单消费者
@@ -134,6 +137,14 @@ public class RabbitTest {
 			//发送任务复杂度都为1的消息
 			distributionSender.send(1);
 		}
+	}
+	
+	/**
+	 * 事务消息发送测试
+	 */
+	@GetMapping("/transition")
+	public void transition() {
+		transactionSender.send("Transition:  ");
 	}
 
 }

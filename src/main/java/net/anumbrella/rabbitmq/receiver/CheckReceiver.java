@@ -20,7 +20,7 @@ public class CheckReceiver {
 			e.printStackTrace();
 		}
 		// 使用时需要在application.properties开启手动确认设置
-		// 消息的标识，false只确认当前一个消息收到，true确认所有consumer获得的消息
+		// 消息的标识，false只确认当前一个消息收到，true确认所有将比第一个参数指定的 delivery tag 小的consumer都获得的消息
 		channel.basicAck(message.getMessageProperties().getDeliveryTag(), false);
 	}
 

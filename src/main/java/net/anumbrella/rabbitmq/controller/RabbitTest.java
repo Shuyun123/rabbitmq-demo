@@ -21,130 +21,130 @@ import net.anumbrella.rabbitmq.sender.UserSender;
 @RequestMapping("/rabbit")
 public class RabbitTest {
 
-	@Autowired
-	private HelloSender1 helloSender1;
+    @Autowired
+    private HelloSender1 helloSender1;
 
-	@Autowired
-	private HelloSender2 helloSender2;
+    @Autowired
+    private HelloSender2 helloSender2;
 
-	@Autowired
-	private TopicSender topicSender;
+    @Autowired
+    private TopicSender topicSender;
 
-	@Autowired
-	private FanoutSender fanoutSender;
+    @Autowired
+    private FanoutSender fanoutSender;
 
-	@Autowired
-	private DirectSender directSender;
+    @Autowired
+    private DirectSender directSender;
 
-	@Autowired
-	private HeadersSender headersSender;
+    @Autowired
+    private HeadersSender headersSender;
 
-	@Autowired
-	private UserSender userSender;
+    @Autowired
+    private UserSender userSender;
 
-	@Autowired
-	private CallBackSender callBackSender;	
-	
-	@Autowired
-	private DistributionSender distributionSender;
-	
-	@Autowired
-	private TransactionSender2 transactionSender;
+    @Autowired
+    private CallBackSender callBackSender;
 
-	/**
-	 * 单生产者和单消费者
-	 */
-	@GetMapping("/hello")
-	public void hello() {
-		helloSender1.send("hello1 ");
-	}
+    @Autowired
+    private DistributionSender distributionSender;
 
-	/**
-	 * 单生产者-多消费者
-	 */
-	@GetMapping("/oneToMany")
-	public void oneToMany() {
-		for (int i = 0; i < 4; i++) {
-			helloSender1.send("第[" + (i + 1) + "]个 ---------> ");
-		}
-	}
+    @Autowired
+    private TransactionSender2 transactionSender;
 
-	/**
-	 * 多生产者-多消费者
-	 */
-	@GetMapping("/manyToMany")
-	public void manyToMany() {
-		for (int i = 0; i < 4; i++) {
-			helloSender1.send("第[" + (i + 1) + "]个 ---------> ");
-			helloSender2.send("第[" + (i + 1) + "]个 ---------> ");
-		}
-	}
+    /**
+     * 单生产者和单消费者
+     */
+    @GetMapping("/hello")
+    public void hello() {
+        helloSender1.send("hello1 ");
+    }
 
-	/**
-	 * topic exchange类型rabbitmq测试
-	 */
-	@GetMapping("/topicTest")
-	public void topicTest() {
-		topicSender.send();
-	}
+    /**
+     * 单生产者-多消费者
+     */
+    @GetMapping("/oneToMany")
+    public void oneToMany() {
+        for (int i = 0; i < 4; i++) {
+            helloSender1.send("第[" + (i + 1) + "]个 ---------> ");
+        }
+    }
 
-	/**
-	 * fanout exchange类型rabbitmq测试
-	 */
-	@GetMapping("/fanoutTest")
-	public void fanoutTest() {
-		fanoutSender.send();
-	}
+    /**
+     * 多生产者-多消费者
+     */
+    @GetMapping("/manyToMany")
+    public void manyToMany() {
+        for (int i = 0; i < 4; i++) {
+            helloSender1.send("第[" + (i + 1) + "]个 ---------> ");
+            helloSender2.send("第[" + (i + 1) + "]个 ---------> ");
+        }
+    }
 
-	/**
-	 * direct exchange类型rabbitmq测试
-	 */
-	@GetMapping("/directTest")
-	public void directTest() {
-		directSender.send();
-	}
+    /**
+     * topic exchange类型rabbitmq测试
+     */
+    @GetMapping("/topicTest")
+    public void topicTest() {
+        topicSender.send();
+    }
 
-	/**
-	 * headers exchange类型rabbitmq测试
-	 */
-	@GetMapping("/headersTest")
-	public void headersTest() {
-		headersSender.send();
-	}
+    /**
+     * fanout exchange类型rabbitmq测试
+     */
+    @GetMapping("/fanoutTest")
+    public void fanoutTest() {
+        fanoutSender.send();
+    }
 
-	/**
-	 * 实体类传输测试
-	 */
-	@GetMapping("/userTest")
-	public void userTest() {
-		userSender.send();
-	}
+    /**
+     * direct exchange类型rabbitmq测试
+     */
+    @GetMapping("/directTest")
+    public void directTest() {
+        directSender.send();
+    }
 
-	/**
-	 * 带callback的消息发送
-	 */
-	@GetMapping("/callback")
-	public void callbak() {
-		callBackSender.send();
-	}
-	
-	/**
-	 * 分发机制消息发送测试
-	 */
-	@GetMapping("/distribu")
-	public void distribu() {
-		for (int i = 0; i < 5; i++) {
-			//发送任务复杂度都为1的消息
-			distributionSender.send(1);
-		}
-	}
-	
-	/**
-	 * 事务消息发送测试
-	 */
-	@GetMapping("/transition")
-	public void transition() {
-		transactionSender.send("Transition:  ");
-	}
+    /**
+     * headers exchange类型rabbitmq测试
+     */
+    @GetMapping("/headersTest")
+    public void headersTest() {
+        headersSender.send();
+    }
+
+    /**
+     * 实体类传输测试
+     */
+    @GetMapping("/userTest")
+    public void userTest() {
+        userSender.send();
+    }
+
+    /**
+     * 带callback的消息发送
+     */
+    @GetMapping("/callback")
+    public void callbak() {
+        callBackSender.send();
+    }
+
+    /**
+     * 分发机制消息发送测试
+     */
+    @GetMapping("/distribu")
+    public void distribu() {
+        for (int i = 0; i < 5; i++) {
+            //发送任务复杂度都为1的消息
+            distributionSender.send(1);
+        }
+    }
+
+    /**
+     * 事务消息发送测试
+     */
+    @GetMapping("/transition")
+    public void transition() {
+        transactionSender.send("Transition:  ");
+    }
 
 }

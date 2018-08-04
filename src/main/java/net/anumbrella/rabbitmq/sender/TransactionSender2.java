@@ -22,7 +22,6 @@ public class TransactionSender2 {
 		 * 这里可以执行数据库操作
 		 * 
 		 **/
-
 		System.out.println("TransactionSender2 : " + sendMsg);
 
 		this.rabbitTemplate.convertAndSend("transition2", sendMsg);

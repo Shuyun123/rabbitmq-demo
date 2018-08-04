@@ -13,7 +13,7 @@ public class DistributionReceiver {
 	/**
 	 * 消费者A
 	 * 
-	 * @param msg
+	 * @param message
 	 */
 	@RabbitListener(queues = "distribu")
 	public void processA(Message message) {
@@ -37,7 +37,7 @@ public class DistributionReceiver {
 	/**
 	 * 消费者B
 	 * 
-	 * @param msg
+	 * @param message
 	 */
 	@RabbitListener(queues = "distribu")
 	public void processB(Message message) {

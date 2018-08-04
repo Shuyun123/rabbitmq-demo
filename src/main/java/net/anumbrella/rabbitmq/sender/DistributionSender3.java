@@ -8,18 +8,20 @@ import org.apache.commons.lang.StringUtils;
 import com.rabbitmq.client.Channel;
 import com.rabbitmq.client.Connection;
 import com.rabbitmq.client.ConnectionFactory;
-
+/**
+ * 这是java原生类支持RabbitMQ，直接运行该类
+ */
 public class DistributionSender3 {
 
 	private final static String QUEUE_NAME = "test";
 
 	public static void main(String[] args) throws IOException, TimeoutException {
 		/**
-		 * 创建连接连接到MabbitMQ
+		 * 创建连接连接到RabbitMQ
 		 */
 		ConnectionFactory factory = new ConnectionFactory();
 
-		// 设置MabbitMQ所在主机ip或者主机名
+		// 设置RabbitMQ所在主机ip或者主机名
 		factory.setUsername("guest");
 		factory.setPassword("guest");
 		factory.setHost("127.0.0.1");

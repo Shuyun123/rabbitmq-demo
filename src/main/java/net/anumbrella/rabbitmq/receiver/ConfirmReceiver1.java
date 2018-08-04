@@ -1,24 +1,19 @@
 package net.anumbrella.rabbitmq.receiver;
 
+
+import com.rabbitmq.client.*;
+
 import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.concurrent.TimeoutException;
 
-import com.rabbitmq.client.AMQP;
-import com.rabbitmq.client.Channel;
-import com.rabbitmq.client.Connection;
-import com.rabbitmq.client.ConnectionFactory;
-import com.rabbitmq.client.Consumer;
-import com.rabbitmq.client.DefaultConsumer;
-import com.rabbitmq.client.Envelope;
-
 /**
  * 这是java原生类支持RabbitMQ，直接运行该类
  */
-public class TransactionReceiver1 {
+public class ConfirmReceiver1 {
 
-    private final static String QUEUE_NAME = "transition";
+    private final static String QUEUE_NAME = "confirm";
 
     public static void main(String[] argv) throws IOException, InterruptedException, TimeoutException {
 
@@ -36,7 +31,7 @@ public class TransactionReceiver1 {
 
         // 声明队列，主要为了防止消息接收者先运行此程序，队列还不存在时创建队列。
         channel.queueDeclare(QUEUE_NAME, false, false, false, null);
-        System.out.println("TransactionReceiver1 waiting for messages. To exit press CTRL+C");
+        System.out.println("ConfirmReceiver1 waiting for messages. To exit press CTRL+C");
 
         // 创建队列消费者
         final Consumer consumer = new DefaultConsumer(channel) {
@@ -47,11 +42,10 @@ public class TransactionReceiver1 {
 
                 String message = new String(body, "UTF-8");
 
-                System.out.println(" TransactionReceiver1  : " + message);
-                System.out.println(" DistributionReceiver2 Done! at " + time.format(new Date()));
+                System.out.println(" ConfirmReceiver1  : " + message);
+                System.out.println(" ConfirmReceiver1 Done! at " + time.format(new Date()));
             }
         };
         channel.basicConsume(QUEUE_NAME, true, consumer);
     }
-
 }

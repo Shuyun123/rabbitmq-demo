@@ -10,20 +10,22 @@ import org.springframework.stereotype.Component;
 
 @Component
 public class CallBackSender implements RabbitTemplate.ConfirmCallback {
+
 	@Autowired
-	private RabbitTemplate rabbitTemplatenew;
+	private RabbitTemplate rabbitTemplate;
 
 	public void send() {
 
-		rabbitTemplatenew.setConfirmCallback(this);
+		rabbitTemplate.setConfirmCallback(this);
 		String msg = "callbackSender : i am callback sender";
 		System.out.println(msg);
 		CorrelationData correlationData = new CorrelationData(UUID.randomUUID().toString());
 		System.out.println("callbackSender UUID: " + correlationData.getId());
-		this.rabbitTemplatenew.convertAndSend("exchange", "topic.messages", msg, correlationData);
+		this.rabbitTemplate.convertAndSend("", "hello", msg, correlationData);
 	}
 
 	public void confirm(CorrelationData correlationData, boolean ack, String cause) {
-		System.out.println("callbakck confirm: " + correlationData.getId() + " ACK : " + ack);
+		// 这里的ack是Broker对发布者消息达到服务端的确认
+		System.out.println("callbakck confirm: " + correlationData.getId() + " ACK : " + ack + " cause : "+ cause);
 	}
 }

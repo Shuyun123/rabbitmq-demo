@@ -248,6 +248,18 @@ public class RabbitConfig {
     }
 
     /**
+     * 声明transition队列，防止直接启动报错
+     *
+     * @return
+     */
+    @Bean
+    public Queue transitionQueueA() {
+        return new Queue("transition");
+    }
+
+
+
+    /**
      * 声明transition2队列
      *
      * @return
